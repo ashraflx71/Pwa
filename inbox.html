@@ -1,57 +1,163 @@
-<div class="container">
-    <header class="card" style="text-align: center; border-bottom: 4px solid var(--accent-blue);">
-        <h1 style="margin: 0;">أشرف المطور</h1>
-        <p style="color: var(--text-dim); margin-top: 5px;">خبير SEO & UI/UX Design</p>
-    </header>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>أشرف المطور | Creative 2026</title>
+    <meta name="description" content="منصة أشرف المطور لخدمات SEO و UI/UX والبرمجيات الخضراء">
+    <meta name="theme-color" content="#000000">
 
-    <main>
-        <section class="card">
-            <h2>🚀 رؤية Creative 2026</h2>
-            <p>نقدم حلولاً برمجية متطورة تعتمد على مبدأ <strong>"Green Software"</strong> لضمان أقصى كفاءة بأقل استهلاك للطاقة.</p>
-            
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 10px;">✅ تحسين محركات البحث (SEO)</li>
-                <li style="margin-bottom: 10px;">✅ تصميم واجهات مستخدم احترافية</li>
-                <li style="margin-bottom: 10px;">✅ أتمتة المحتوى والذكاء الاصطناعي</li>
-            </ul>
-        </section>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/svg+xml" href="./icon.svg">
 
-        <section id="install-section" style="display: none;">
-            <button id="btnInstall" class="btn-royal">تثبيت التطبيق على هاتفك</button>
-        </section>
-
-        <section class="card">
-            <h2>🛠️ أدواتي الذكية</h2>
-            <p>تطبيق <strong>Optimum Courier AI</strong> لتحليل المهام وتطوير الأداء الرقمي.</p>
-            <a href="#" class="btn-royal">اكتشف المزيد</a>
-        </section>
-    </main>
-
-    <footer style="text-align: center; padding: 20px; color: var(--text-dim); font-size: 0.9rem;">
-        <p>&copy; 2026 جميع الحقوق محفوظة لـ <strong>أشرف حسن علي</strong></p>
-    </footer>
-</div>
-
-<div id="network-toast"></div>
-
-<script src="./app.js"></script>
-<script>
-    // كود إضافي لربط زر التثبيت بـ AppManager
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('install-section').style.display = 'block';
-    });
-
-    document.getElementById('btnInstall').addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                document.getElementById('install-section').style.display = 'none';
-            }
-            deferredPrompt = null;
+    <style>
+        /* التنسيق الملكي - CSS */
+        :root {
+            --bg-dark: #000000;
+            --accent-blue: #007bff;
+            --text-white: #ffffff;
+            --card-bg: #111111;
         }
-    });
-</script>
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            font-size: 20px; /* مقاس الخط المفضل */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            border-top: 6px solid var(--accent-blue);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        h1 { color: var(--accent-blue); margin: 0 0 10px 0; font-size: 32px; }
+        p { color: #bbb; line-height: 1.6; }
+
+        .btn-royal {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-royal:active { transform: scale(0.95); }
+
+        /* نظام التنبيهات */
+        #status-toast {
+            position: fixed;
+            bottom: 20px;
+            background: rgba(0, 123, 255, 0.9);
+            padding: 10px 25px;
+            border-radius: 30px;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="card">
+            <h1>Creative 2026</h1>
+            <p>منصة أشرف المطور للحلول التقنية</p>
+        </header>
+
+        <main>
+            <section class="card">
+                <h2 style="color: white;">خبير SEO & UI/UX</h2>
+                <p>نصنع مستقبلاً رقمياً يعتمد على كفاءة الطاقة والبرمجة الخضراء المتطورة.</p>
+                <button id="installBtn" class="btn-royal" style="display: none;">تثبيت التطبيق الملكي</button>
+            </section>
+
+            <section class="card">
+                <h2 style="color: var(--accent-blue);">أدواتنا الذكية</h2>
+                <p>Optimum Courier AI & Content Factory</p>
+                <a href="#" class="btn-royal">اكتشف الخدمات</a>
+            </section>
+        </main>
+
+        <footer style="text-align: center; color: #555; padding-bottom: 20px;">
+            &copy; 2026 أشرف حسن علي - جميع الحقوق محفوظة
+        </footer>
+    </div>
+
+    <div id="status-toast"></div>
+
+    <script>
+        // 1. إدارة الشبكة والواجهة (AppManager)
+        const AppManager = {
+            init() {
+                this.handleNetwork();
+                this.registerSW();
+            },
+            handleNetwork() {
+                const toast = document.getElementById('status-toast');
+                const updateStatus = () => {
+                    const online = navigator.onLine;
+                    document.body.style.borderTopColor = online ? "#007bff" : "#555";
+                    toast.innerText = online ? "متصل بالشبكة ✅" : "أنت تعمل في وضع الأوفلاين ⚠️";
+                    toast.style.display = "block";
+                    setTimeout(() => toast.style.display = "none", 3000);
+                };
+                window.addEventListener('online', updateStatus);
+                window.addEventListener('offline', updateStatus);
+            },
+            registerSW() {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('./service-worker.js')
+                    .then(() => console.log("SW Registered"));
+                }
+            }
+        };
+
+        // 2. معالجة تثبيت الـ PWA
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') installBtn.style.display = 'none';
+                deferredPrompt = null;
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => AppManager.init());
+    </script>
+</body>
+</html>
