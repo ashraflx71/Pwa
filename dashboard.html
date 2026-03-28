@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative 2026 | Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --primary-blue: #007bff;
+            --text-white: #ffffff;
+            --card-bg: #111111;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            font-size: 20px; /* الحجم الذي تفضله لسهولة القراءة */
+        }
+        .header {
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #222;
+            padding: 25px;
+            border-radius: 12px;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-5px);
+        }
+        .card h3 { color: var(--primary-blue); margin-top: 0; }
+        .status-online { color: #2ecc71; font-weight: bold; }
+        .btn-action {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>منصة Creative 2026</h2>
+        <span class="status-online">● النظام نشط</span>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>أتمتة المحتوى</h3>
+            <p>حالة الـ Content Factory: جاهز</p>
+            <button class="btn-action">تشغيل الأتمتة</button>
+        </div>
+        <div class="card">
+            <h3>تحليل SEO</h3>
+            <p>آخر فحص لموقع pwa: ناجح</p>
+            <button class="btn-action" style="background: #333;">عرض التقارير</button>
+        </div>
+        <div class="card">
+            <h3>حالة الـ PWA</h3>
+            <p>Service Worker: متصل</p>
+            <p>وضع الأوفلاين: مفعّل</p>
+        </div>
+    </div>
+</body>
+</html>
