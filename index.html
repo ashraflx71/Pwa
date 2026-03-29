@@ -1,14 +1,58 @@
-<meta name="description" content="منصة Creative 2026 للأتمتة والبرمجة الخضراء بقيادة أشرف المطور. حلول SEO متقدمة وتصميمات UI/UX ملكية في الإسكندرية.">
-<meta name="keywords" content="أشرف المطور, Creative 2026, سيو, SEO Egypt, برمجة خضراء, أتمتة فيديوهات, بايثون, UI/UX Alexandria">
-<meta name="author" content="Ashraf Hassan Ali Abdulnabi">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أشرف المطور | Creative 2026</title>
+    
+    <meta name="description" content="منصة أتمتة المحتوى والبرمجة الخضراء بقيادة أشرف المطور.">
+    <meta name="keywords" content="أشرف المطور, Creative 2026, SEO, أتمتة, بايثون">
+    
+    <style>
+        :root { --blue-royal: #007bff; --black-bg: #000000; --card-bg: #111111; }
+        body { background: var(--black-bg); color: white; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 20px; border-top: 6px solid var(--blue-royal); text-align: center; }
+        .container { max-width: 500px; margin: auto; padding-top: 30px; }
+        .card { background: var(--card-bg); padding: 30px; border-radius: 25px; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,123,255,0.1); }
+        h1 { color: var(--blue-royal); font-size: 32px; margin-bottom: 10px; }
+        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 15px; font-size: 16px; }
+        .btn-royal { background: var(--blue-royal); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; font-size: 18px; width: 100%; cursor: pointer; transition: 0.3s; }
+        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 13px; padding: 15px; border-radius: 12px; margin-top: 20px; text-align: left; height: 120px; overflow-y: auto; border: 1px solid #111; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Creative 2026</h1>
+            <p style="color: #888;">مركز قيادة أشرف المطور للأتمتة</p>
+            
+            <input type="text" id="taskInput" placeholder="أدخل أمر الأتمتة (SEO أو فيديو)...">
+            <button class="btn-royal" onclick="runFactory()">تشغيل المصنع 🏭</button>
+            
+            <div id="log-console">> في انتظار أوامرك يا كوماندر...</div>
+        </div>
+    </div>
 
-<meta property="og:title" content="Creative 2026 | مصنع الأتمتة والجمال التقني">
-<meta property="og:description" content="حلول ذكية لإنتاج المحتوى وتطوير الويب بأعلى كفاءة طاقة.">
-<meta property="og:image" content="icon.svg">
-<meta property="og:url" content="https://ashraflx71.github.io/Pwa/">
+    <script>
+        async function runFactory() {
+            const task = document.getElementById('taskInput').value;
+            const log = document.getElementById('log-console');
+            
+            if (!task) { alert("ادخل الأمر أولاً!"); return; }
 
-<link rel="canonical" href="https://ashraflx71.github.io/Pwa/" />
+            log.innerHTML += `<br>> جاري إرسال المهمة: [${task}]...`;
 
-<meta name="language" content="Arabic">
-<meta name="geo.region" content="EG-ALX">
-<meta name="geo.placename" content="Alexandria, El Hanoville">
+            try {
+                const response = await fetch('/run-command', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ command: task })
+                });
+                const result = await response.json();
+                log.innerHTML += `<br><span style="color: #0f0;">✅ تم التنفيذ: ${result.message}</span>`;
+            } catch (e) {
+                log.innerHTML += `<br><span style="color: #f00;">❌ خطأ: تأكد أن سيرفر Pydroid يعمل!</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
