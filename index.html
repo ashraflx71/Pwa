@@ -3,54 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative 2026 | VideoGen</title>
+    <title>Creative 2026 | AutoGen</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { --blue: #007bff; --green: #28a745; --bg: #050505; }
-        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; text-align: center; padding: 20px; margin: 0; }
-        .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 25px; max-width: 450px; margin: auto; box-shadow: 0 10px 30px rgba(0,123,255,0.2); }
-        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid var(--blue); background: #000; color: #fff; margin: 15px 0; text-align: center; font-family: 'Cairo'; font-size: 16px; }
-        .btn-blue { background: var(--blue); color: white; border: none; padding: 18px; border-radius: 50px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn-green { background: var(--green); color: white; border: none; padding: 18px; border-radius: 50px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 20px; display: none; text-decoration: none; }
-        #videoResult { width: 100%; margin-top: 20px; border-radius: 15px; display: none; border: 2px solid var(--blue); }
+        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; text-align: center; padding: 20px; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .card { background: #111; border: 1px solid #222; border-radius: 30px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 15px 50px rgba(0,123,255,0.3); }
+        .btn-main { background: linear-gradient(45deg, var(--blue), #0056b3); color: white; border: none; padding: 25px; border-radius: 50px; width: 100%; font-weight: bold; cursor: pointer; font-size: 20px; box-shadow: 0 8px 20px rgba(0,123,255,0.4); transition: 0.3s; }
+        .btn-main:active { transform: scale(0.95); }
+        .btn-save { background: var(--green); color: white; border: none; padding: 18px; border-radius: 50px; width: 100%; font-weight: bold; display: none; text-decoration: none; margin-top: 25px; font-size: 16px; }
+        #vRes { width: 100%; margin-top: 25px; border-radius: 20px; display: none; border: 3px solid var(--blue); }
         canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1 style="color: var(--blue); margin-bottom: 5px;">Creative 2026</h1>
-    <p style="color:#888; font-size: 14px;">مصنع أشرف المطور للإنتاج الآلي 🏭</p>
+    <h1 style="color: var(--blue); margin-bottom: 10px;">Creative 2026</h1>
+    <p style="color:#666; margin-bottom: 30px;">نظام الأتمتة الذكي | أشرف المطور</p>
     
-    <input type="text" id="userInput" placeholder="اكتب نص الفيديو هنا...">
+    <button id="go" class="btn-main" onclick="autoGen()">🚀 تشغيل المصنع الآن</button>
     
-    <button id="actionBtn" class="btn-blue" onclick="startVideoProduction()">🚀 إنتاج الفيديو الآن</button>
+    <div id="status" style="margin-top:20px; color: var(--blue); font-weight: bold;"></div>
     
-    <div id="statusLabel" style="margin-top:15px; color: var(--blue); font-size: 14px; font-weight: bold;"></div>
-    
-    <video id="videoResult" controls playsinline></video>
-    
-    <a id="downloadBtn" class="btn-green">📥 حفظ الفيديو في المعرض</a>
+    <video id="vRes" controls playsinline></video>
+    <a id="save" class="btn-save">📥 حفظ الفيديو المنتج</a>
 </div>
 
-<canvas id="mainCanvas" width="640" height="360"></canvas>
+<canvas id="cnv" width="640" height="360"></canvas>
 
 <script>
-async function startVideoProduction() {
-    const text = document.getElementById('userInput').value;
-    const btn = document.getElementById('actionBtn');
-    const status = document.getElementById('statusLabel');
-    const video = document.getElementById('videoResult');
-    const dlLink = document.getElementById('downloadBtn');
-    const canvas = document.getElementById('mainCanvas');
+// قائمة النصوص الاحترافية (المصنع هيختار منها عشوائياً)
+const ashrafScripts = [
+    "Creative 2026 | مستقبل الأتمتة الرقمية برؤية أشرف المطور",
+    "تصدر نتائج البحث (SEO) يبدأ من تجربة مستخدم (UI/UX) ذكية",
+    "البرمجيات الخضراء: كفاءة عالية، سرعة فائقة، واستهلاك أقل",
+    "أشرف المطور: تحويل الأفكار إلى أصول رقمية قوية ومستدامة"
+];
+
+async function autoGen() {
+    const btn = document.getElementById('go');
+    const status = document.getElementById('status');
+    const video = document.getElementById('vRes');
+    const save = document.getElementById('save');
+    const canvas = document.getElementById('cnv');
     const ctx = canvas.getContext('2d');
 
-    if(!text) return alert("يا كوماندر.. ادخل النص أولاً!");
+    // اختيار نص عشوائي
+    const text = ashrafScripts[Math.floor(Math.random() * ashrafScripts.length)];
 
     btn.disabled = true;
-    status.innerText = "⏳ جاري الرندر السحابي...";
+    status.innerText = "⏳ جاري الرندر الآلي...";
     video.style.display = "none";
-    dlLink.style.display = "none";
+    save.style.display = "none";
 
     const stream = canvas.captureStream(30);
     const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
@@ -60,61 +65,41 @@ async function startVideoProduction() {
     recorder.onstop = () => {
         const blob = new Blob(chunks, { type: 'video/mp4' });
         const url = URL.createObjectURL(blob);
-        
         video.src = url;
         video.style.display = "block";
-        
-        // تفعيل وإظهار زرار الحفظ
-        dlLink.href = url;
-        dlLink.download = `Ashraf_Creative_2026.mp4`;
-        dlLink.style.display = "block"; 
-        
+        video.play();
+        save.href = url;
+        save.download = `Creative2026_Auto_${Date.now()}.mp4`;
+        save.style.display = "block";
         status.innerText = "✅ تم الإنتاج بنجاح!";
         btn.disabled = false;
     };
 
     recorder.start();
-    let frame = 0;
-    const totalFrames = 150; 
-
-    function renderFrame() {
-        ctx.fillStyle = '#050505';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    let f = 0;
+    function draw() {
+        ctx.fillStyle = '#050505'; ctx.fillRect(0,0,640,360);
+        ctx.strokeStyle = '#007bff'; ctx.lineWidth = 15; ctx.strokeRect(15,15,610,330);
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 32px Cairo'; ctx.textAlign = 'center';
         
-        ctx.strokeStyle = '#007bff';
-        ctx.lineWidth = 15;
-        ctx.strokeRect(10, 10, 620, 340);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 35px Cairo';
-        ctx.textAlign = 'center';
-        
-        // تقسيم النص لأسطر
+        // تقسيم النص تلقائياً
         const words = text.split(' ');
-        let line = '';
-        let y = 160;
-        for(let n = 0; n < words.length; n++) {
-            let testLine = line + words[n] + ' ';
-            if (ctx.measureText(testLine).width > 550 && n > 0) {
-                ctx.fillText(line, 320, y);
-                line = words[n] + ' ';
-                y += 50;
-            } else { line = testLine; }
+        let line = ''; let y = 160;
+        for(let n=0; n<words.length; n++){
+            let test = line + words[n] + ' ';
+            if(ctx.measureText(test).width > 540 && n>0){
+                ctx.fillText(line, 320, y); line = words[n] + ' '; y += 50;
+            } else { line = test; }
         }
         ctx.fillText(line, 320, y);
 
-        ctx.font = '20px Cairo';
-        ctx.fillStyle = '#007bff';
-        ctx.fillText("Creative 2026 | Developed by Ashraf", 320, 320);
+        ctx.font = '18px Cairo'; ctx.fillStyle = '#007bff';
+        ctx.fillText("Production: Ashraf | 2026", 320, 310);
 
-        if (frame < totalFrames) {
-            frame++;
-            requestAnimationFrame(renderFrame);
-        } else {
-            recorder.stop();
-        }
+        if(f < 150) { f++; requestAnimationFrame(draw); }
+        else { recorder.stop(); }
     }
-    renderFrame();
+    draw();
 }
 </script>
 </body>
