@@ -1,24 +1,10 @@
-const cacheName = 'creative-2026-v1';
-const assets = [
-  '/Pwa/',
-  '/Pwa/index.html',
-  '/Pwa/manifest.json'
-];
+const CACHE_NAME = 'ashraf-assets-v1';
+const assets = ['./index.html', './manifest.json', './icon.svg'];
 
-// تثبيت الخدمة وحفظ الملفات الأساسية
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(cacheName).then(cache => {
-      return cache.addAll(assets);
-    })
-  );
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(assets)));
 });
 
-// تشغيل التطبيق من الذاكرة عند انقطاع الإنترنت
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(res => {
-      return res || fetch(e.request);
-    })
-  );
+self.addEventListener('fetch', (e) => {
+  e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
 });
