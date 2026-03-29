@@ -3,68 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أشرف المطور | Creative 2026 Control</title>
+    <title>Creative 2026 | أشرف المطور</title>
     <style>
-        :root { --blue-royal: #007bff; --black-bg: #000; --green-success: #28a745; }
-        body { background: var(--black-bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; border-top: 6px solid var(--blue-royal); }
-        .container { max-width: 450px; margin: auto; padding-top: 20px; }
-        .card { background: #111; padding: 25px; border-radius: 25px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,123,255,0.1); }
-        h1 { color: var(--blue-royal); font-size: 26px; }
-        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 15px; outline: none; }
-        .btn { border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; margin-bottom: 10px; transition: 0.3s; color: white; }
-        .btn-blue { background: var(--blue-royal); }
-        .btn-green { background: var(--green-success); font-size: 13px; }
-        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px; border-radius: 15px; margin-top: 20px; text-align: left; height: 120px; overflow-y: auto; border: 1px solid #1a1a1a; line-height: 1.5; }
+        :root { --blue-royal: #007bff; --black-bg: #000; }
+        body { background: var(--black-bg); color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .card { background: #111; padding: 30px; border-radius: 25px; border: 1px solid #222; max-width: 400px; margin: auto; box-shadow: 0 10px 40px rgba(0,123,255,0.2); }
+        h1 { color: var(--blue-royal); margin-bottom: 20px; }
+        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 20px; outline: none; border: 1px solid var(--blue-royal); }
+        .btn-royal { background: var(--blue-royal); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; }
+        #status { margin-top: 20px; color: #0f0; font-family: monospace; font-size: 14px; }
+        audio { width: 100%; margin-top: 20px; filter: invert(1); display: none; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <h1>Creative 2026</h1>
-            <p style="color:#888;">لوحة تحكم أشرف المطور 🚀</p>
-            
-            <button class="btn btn-green" onclick="installLibrary()">🛠️ تثبيت محرك الفيديو (MoviePy)</button>
-            <hr style="border: 0.5px solid #222; margin: 15px 0;">
-            
-            <input type="text" id="taskInput" placeholder="اكتب نص الفيديو هنا...">
-            <button class="btn btn-blue" onclick="runFactory()">إنتاج الفيديو 🏭</button>
-            
-            <div id="log-console">> مركز القيادة جاهز...</div>
-        </div>
+
+    <div class="card">
+        <h1>Creative 2026</h1>
+        <p style="color: #888;">مصنع أشرف الصوتي السريع 🎙️</p>
+        
+        <input type="text" id="textInput" placeholder="اكتب النص هنا...">
+        <button class="btn-royal" onclick="speakNow()">نطق النص فوراً 🔊</button>
+        
+        <div id="status">جاهز للتنفيذ..</div>
+        <audio id="audioPlayer" controls></audio>
     </div>
 
     <script>
-        const log = document.getElementById('log-console');
+        function speakNow() {
+            const text = document.getElementById('textInput').value;
+            const status = document.getElementById('status');
+            
+            if (!text) { alert("يا كوماندر.. اكتب النص الأول!"); return; }
 
-        // وظيفة التثبيت عبر الـ HTML
-        async function installLibrary() {
-            log.innerHTML += `<br>> 📥 جاري طلب تثبيت MoviePy...`;
-            try {
-                const response = await fetch('/install-pkg', { method: 'POST' });
-                const result = await response.json();
-                log.innerHTML += `<br><span style="color: #0f0;">✅ ${result.message}</span>`;
-            } catch (e) {
-                log.innerHTML += `<br><span style="color: #f00;">❌ تأكد من تشغيل السيرفر أولاً!</span>`;
-            }
-        }
-
-        async function runFactory() {
-            const task = document.getElementById('taskInput').value;
-            if (!task) return alert("ادخل النص!");
-            log.innerHTML += `<br>> 🎬 جاري الرندر...`;
-            try {
-                const response = await fetch('/run-command', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ command: task })
-                });
-                const result = await response.json();
-                if(result.status === "ok") {
-                    log.innerHTML += `<br><span style="color: #0f0;">✅ فيديو جاهز: output_video.mp4</span>`;
-                }
-            } catch (e) {
-                log.innerHTML += `<br><span style="color: #f00;">⚠️ المحرك قد يكون قيد التثبيت.. انتظر.</span>`;
-            }
+            status.innerText = ">> جاري النطق بصوت عالي الجودة...";
+            
+            // استخدام محرك النطق الداخلي للمتصفح (خفيف جداً وبدون بايثون)
+            const speech = new SpeechSynthesisUtterance();
+            speech.text = text;
+            speech.lang = 'ar-SA'; // لغة عربية احترافية
+            speech.rate = 0.9;     // سرعة هادئة ملكية
+            
+            window.speechSynthesis.speak(speech);
+            
+            speech.onend = () => {
+                status.innerText = "✅ تمت المهمة بنجاح يا كوماندر أشرف!";
+            };
         }
     </script>
 </body>
