@@ -7,15 +7,15 @@
     <style>
         :root { --blue-royal: #007bff; --black-bg: #000; --card-bg: #111; }
         body { background: var(--black-bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; border-top: 6px solid var(--blue-royal); }
-        .container { max-width: 450px; margin: auto; padding-top: 40px; }
-        .card { background: var(--card-bg); padding: 30px; border-radius: 25px; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,123,255,0.15); }
-        h1 { color: var(--blue-royal); font-size: 30px; margin-bottom: 5px; }
-        p { color: #888; margin-bottom: 25px; }
-        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; font-size: 16px; margin-bottom: 20px; outline: none; }
-        input:focus { border-color: var(--blue-royal); }
+        .container { max-width: 450px; margin: auto; padding-top: 30px; }
+        .card { background: var(--card-bg); padding: 30px; border-radius: 25px; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,123,255,0.2); }
+        h1 { color: var(--blue-royal); font-size: 28px; margin-bottom: 5px; }
+        p { color: #888; font-size: 14px; margin-bottom: 25px; }
+        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; font-size: 16px; margin-bottom: 20px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--blue-royal); box-shadow: 0 0 10px rgba(0,123,255,0.5); }
         .btn-royal { background: var(--blue-royal); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; font-size: 18px; width: 100%; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,123,255,0.3); }
-        .btn-royal:active { transform: scale(0.98); }
-        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 13px; padding: 15px; border-radius: 15px; margin-top: 25px; text-align: left; height: 130px; overflow-y: auto; border: 1px solid #1a1a1a; line-height: 1.6; }
+        .btn-royal:active { transform: scale(0.95); }
+        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px; border-radius: 15px; margin-top: 25px; text-align: left; height: 150px; overflow-y: auto; border: 1px solid #1a1a1a; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -24,10 +24,10 @@
             <h1>Creative 2026</h1>
             <p>مركز قيادة أشرف المطور للأتمتة والـ SEO</p>
             
-            <input type="text" id="taskInput" placeholder="أدخل عنوان الفيديو أو المهمة...">
+            <input type="text" id="taskInput" placeholder="أدخل مهمة الإنتاج هنا...">
             <button class="btn-royal" onclick="runFactory()">تشغيل المصنع 🏭</button>
             
-            <div id="log-console">> نظام Creative 2026 جاهز...</div>
+            <div id="log-console">> نظام أشرف جاهز لاستلام الأوامر...</div>
         </div>
     </div>
 
@@ -38,23 +38,24 @@
             
             if (!task) { alert("يا كوماندر.. ادخل المهمة أولاً!"); return; }
 
-            log.innerHTML += `<br>> 🎬 جاري البدء في إنتاج: [${task}]...`;
+            log.innerHTML += `<br>> 🎬 جاري إرسال الطلب للمحرك التقني...`;
 
             try {
+                // استخدمنا المسار النسبي لضمان التوافق مع السيرفر
                 const response = await fetch('/run-command', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ command: task })
                 });
                 
                 const result = await response.json();
                 
                 if(result.status === "ok") {
-                    log.innerHTML += `<br><span style="color: #0f0;">✅ تم الإنتاج: ${result.message}</span>`;
-                    log.innerHTML += `<br><button class="btn-royal" style="background:#28a745; margin-top:10px; font-size:14px; padding:10px;">📥 جاهز للتحميل</button>`;
+                    log.innerHTML += `<br><span style="color: #0f0;">✅ استجابة المحرك: ${result.message}</span>`;
+                    log.innerHTML += `<br><button class="btn-royal" style="background:#28a745; margin-top:10px; font-size:14px; padding:8px;">📥 تحميل الفيديو الناتج</button>`;
                 }
             } catch (e) {
-                log.innerHTML += `<br><span style="color: #f00;">❌ خطأ: تأكد أن سيرفر Pydroid يعمل!</span>`;
+                log.innerHTML += `<br><span style="color: #f00;">❌ خطأ اتصال: تأكد أن Pydroid يعمل!</span>`;
             }
             log.scrollTop = log.scrollHeight;
         }
