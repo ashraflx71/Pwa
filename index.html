@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أشرف المطور | استوديو 2026</title>
+    <title>أشرف المطور | Creative 2026 Production</title>
     <style>
         :root { --blue-royal: #007bff; --black-bg: #000; --card-bg: #111; }
         body { background: var(--black-bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; border-top: 6px solid var(--blue-royal); }
         .container { max-width: 450px; margin: auto; padding-top: 30px; }
         .card { background: var(--card-bg); padding: 30px; border-radius: 25px; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,123,255,0.2); }
         h1 { color: var(--blue-royal); font-size: 28px; margin-bottom: 10px; }
-        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 20px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--blue-royal); }
-        .btn-royal { background: var(--blue-royal); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; }
-        #audioPlayer { width: 100%; margin-top: 25px; display: none; filter: invert(1); }
-        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px; border-radius: 15px; margin-top: 20px; text-align: left; height: 100px; overflow-y: auto; border: 1px solid #1a1a1a; }
+        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 20px; outline: none; }
+        .btn-royal { background: var(--blue-royal); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,123,255,0.3); }
+        .btn-royal:disabled { background: #444; cursor: not-allowed; }
+        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px; border-radius: 15px; margin-top: 20px; text-align: left; height: 120px; overflow-y: auto; border: 1px solid #1a1a1a; line-height: 1.6; }
+        .video-link { display: none; margin-top: 20px; background: #28a745; color: white; padding: 15px; border-radius: 10px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <h1>Creative 2026</h1>
-            <p style="color:#888;">استوديو أشرف المطور الصوتي 🎙️</p>
-            <input type="text" id="taskInput" placeholder="اكتب النص هنا لتحويله لصوت...">
-            <button class="btn-royal" onclick="runFactory()">إنتاج المقطع الصوتي 🏭</button>
-            <audio id="audioPlayer" controls></audio>
+            <p style="color:#888;">مصنع إنتاج الفيديو الآلي 🎬</p>
+            <input type="text" id="taskInput" placeholder="اكتب نص الفيديو التجريبي هنا...">
+            <button id="mainBtn" class="btn-royal" onclick="runFactory()">بدء رندر الفيديو 🏭</button>
+            <a id="downloadLink" class="video-link" target="_blank">📽️ مشاهدة وتحميل الفيديو الناتج</a>
             <div id="log-console">> مركز قيادة أشرف جاهز...</div>
         </div>
     </div>
@@ -33,10 +33,14 @@
         async function runFactory() {
             const task = document.getElementById('taskInput').value;
             const log = document.getElementById('log-console');
-            const player = document.getElementById('audioPlayer');
+            const btn = document.getElementById('mainBtn');
+            const link = document.getElementById('downloadLink');
             
             if (!task) { alert("يا كوماندر.. ادخل النص أولاً!"); return; }
-            log.innerHTML += `<br>> 🎬 جاري إرسال الطلب للمحرك...`;
+
+            btn.disabled = true;
+            link.style.display = "none";
+            log.innerHTML += `<br>> ⚙️ جاري معالجة الصوت والرندر... (انتظر ثواني)`;
 
             try {
                 const response = await fetch('/run-command', {
@@ -45,23 +49,19 @@
                     body: JSON.stringify({ command: task })
                 });
                 
-                // التأكد من أن الرد سليم قبل معالجته
-                if (!response.ok) throw new Error("السيرفر لا يستجيب");
-                
                 const result = await response.json();
                 
                 if(result.status === "ok") {
-                    log.innerHTML += `<br><span style="color: #0f0;">✅ تم الإنتاج بنجاح!</span>`;
-                    // تحديث المصدر مع إضافة كود زمني لمنع تكرار الصوت القديم (Cache busting)
-                    player.src = "/production_voice.mp3?t=" + new Date().getTime();
-                    player.style.display = "block";
-                    player.load(); // إعادة تحميل الملف الجديد
-                    player.play();
+                    log.innerHTML += `<br><span style="color: #0f0;">✅ تم إنتاج الفيديو بنجاح!</span>`;
+                    link.href = "/output_video.mp4?t=" + new Date().getTime();
+                    link.style.display = "inline-block";
                 }
             } catch (e) {
-                log.innerHTML += `<br><span style="color: #f00;">❌ خطأ: تأكد أن Pydroid يعمل خلف الكواليس!</span>`;
+                log.innerHTML += `<br><span style="color: #f00;">❌ خطأ اتصال: تأكد أن Pydroid يعمل!</span>`;
+            } finally {
+                btn.disabled = false;
+                log.scrollTop = log.scrollHeight;
             }
-            log.scrollTop = log.scrollHeight;
         }
     </script>
 </body>
