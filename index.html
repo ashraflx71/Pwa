@@ -3,64 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أشرف المطور | Creative 2026 Production</title>
+    <title>أشرف المطور | Creative 2026 Control</title>
     <style>
-        :root { --blue-royal: #007bff; --black-bg: #000; --card-bg: #111; }
+        :root { --blue-royal: #007bff; --black-bg: #000; --green-success: #28a745; }
         body { background: var(--black-bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; border-top: 6px solid var(--blue-royal); }
-        .container { max-width: 450px; margin: auto; padding-top: 30px; }
-        .card { background: var(--card-bg); padding: 30px; border-radius: 25px; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,123,255,0.2); }
-        h1 { color: var(--blue-royal); font-size: 28px; margin-bottom: 10px; }
-        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 20px; outline: none; }
-        .btn-royal { background: var(--blue-royal); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,123,255,0.3); }
-        .btn-royal:disabled { background: #444; cursor: not-allowed; }
-        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px; border-radius: 15px; margin-top: 20px; text-align: left; height: 120px; overflow-y: auto; border: 1px solid #1a1a1a; line-height: 1.6; }
-        .video-link { display: none; margin-top: 20px; background: #28a745; color: white; padding: 15px; border-radius: 10px; text-decoration: none; font-weight: bold; }
+        .container { max-width: 450px; margin: auto; padding-top: 20px; }
+        .card { background: #111; padding: 25px; border-radius: 25px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,123,255,0.1); }
+        h1 { color: var(--blue-royal); font-size: 26px; }
+        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 15px; outline: none; }
+        .btn { border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; margin-bottom: 10px; transition: 0.3s; color: white; }
+        .btn-blue { background: var(--blue-royal); }
+        .btn-green { background: var(--green-success); font-size: 13px; }
+        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px; border-radius: 15px; margin-top: 20px; text-align: left; height: 120px; overflow-y: auto; border: 1px solid #1a1a1a; line-height: 1.5; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <h1>Creative 2026</h1>
-            <p style="color:#888;">مصنع إنتاج الفيديو الآلي 🎬</p>
-            <input type="text" id="taskInput" placeholder="اكتب نص الفيديو التجريبي هنا...">
-            <button id="mainBtn" class="btn-royal" onclick="runFactory()">بدء رندر الفيديو 🏭</button>
-            <a id="downloadLink" class="video-link" target="_blank">📽️ مشاهدة وتحميل الفيديو الناتج</a>
-            <div id="log-console">> مركز قيادة أشرف جاهز...</div>
+            <p style="color:#888;">لوحة تحكم أشرف المطور 🚀</p>
+            
+            <button class="btn btn-green" onclick="installLibrary()">🛠️ تثبيت محرك الفيديو (MoviePy)</button>
+            <hr style="border: 0.5px solid #222; margin: 15px 0;">
+            
+            <input type="text" id="taskInput" placeholder="اكتب نص الفيديو هنا...">
+            <button class="btn btn-blue" onclick="runFactory()">إنتاج الفيديو 🏭</button>
+            
+            <div id="log-console">> مركز القيادة جاهز...</div>
         </div>
     </div>
 
     <script>
+        const log = document.getElementById('log-console');
+
+        // وظيفة التثبيت عبر الـ HTML
+        async function installLibrary() {
+            log.innerHTML += `<br>> 📥 جاري طلب تثبيت MoviePy...`;
+            try {
+                const response = await fetch('/install-pkg', { method: 'POST' });
+                const result = await response.json();
+                log.innerHTML += `<br><span style="color: #0f0;">✅ ${result.message}</span>`;
+            } catch (e) {
+                log.innerHTML += `<br><span style="color: #f00;">❌ تأكد من تشغيل السيرفر أولاً!</span>`;
+            }
+        }
+
         async function runFactory() {
             const task = document.getElementById('taskInput').value;
-            const log = document.getElementById('log-console');
-            const btn = document.getElementById('mainBtn');
-            const link = document.getElementById('downloadLink');
-            
-            if (!task) { alert("يا كوماندر.. ادخل النص أولاً!"); return; }
-
-            btn.disabled = true;
-            link.style.display = "none";
-            log.innerHTML += `<br>> ⚙️ جاري معالجة الصوت والرندر... (انتظر ثواني)`;
-
+            if (!task) return alert("ادخل النص!");
+            log.innerHTML += `<br>> 🎬 جاري الرندر...`;
             try {
                 const response = await fetch('/run-command', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ command: task })
                 });
-                
                 const result = await response.json();
-                
                 if(result.status === "ok") {
-                    log.innerHTML += `<br><span style="color: #0f0;">✅ تم إنتاج الفيديو بنجاح!</span>`;
-                    link.href = "/output_video.mp4?t=" + new Date().getTime();
-                    link.style.display = "inline-block";
+                    log.innerHTML += `<br><span style="color: #0f0;">✅ فيديو جاهز: output_video.mp4</span>`;
                 }
             } catch (e) {
-                log.innerHTML += `<br><span style="color: #f00;">❌ خطأ اتصال: تأكد أن Pydroid يعمل!</span>`;
-            } finally {
-                btn.disabled = false;
-                log.scrollTop = log.scrollHeight;
+                log.innerHTML += `<br><span style="color: #f00;">⚠️ المحرك قد يكون قيد التثبيت.. انتظر.</span>`;
             }
         }
     </script>
